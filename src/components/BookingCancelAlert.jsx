@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { TrashBin } from "@gravity-ui/icons";
 import { AlertDialog, Button } from "@heroui/react";
 
@@ -7,10 +8,13 @@ export function BookingCancelAlert({ bookingId }) {
   console.log("bookingId", bookingId);
 
   const handleCancelBooking = async () => {
+    const { token: tokenData } = await authClient.token();
+
     const res = await fetch(`http://localhost:5000/booking/${bookingId}`, {
       method: "DELETE",
       headers: {
         "content-type": "application/json",
+        authorization: `Bearer ${tokenData?.token}`,
       },
     });
     const data = await res.json();
@@ -39,9 +43,8 @@ export function BookingCancelAlert({ bookingId }) {
             </AlertDialog.Header>
             <AlertDialog.Body>
               <p>
-                This will permanently delete{" "}
-                <strong>Project</strong> and all of its data.
-                This action cannot be undone.
+                This will permanently delete <strong>Project</strong> and all of
+                its data. This action cannot be undone.
               </p>
             </AlertDialog.Body>
             <AlertDialog.Footer>

@@ -1,7 +1,9 @@
 import BookingCard from "@/components/BookingCard";
 import { DeleteAlert } from "@/components/DeleteAlert";
 import { EditModal } from "@/components/EditModal";
+import { auth } from "@/lib/auth";
 import { Button } from "@heroui/react";
+import { headers } from "next/headers";
 import Image from "next/image";
 import React from "react";
 import { BiEdit } from "react-icons/bi";
@@ -11,9 +13,13 @@ import { PiMapPinLineBold } from "react-icons/pi";
 const DestinationDetailPage = async ({ params }) => {
   const { id } = await params;
 
+  const token = await auth.api.getToken({
+    headers: await headers(),
+  });
+  console.log(token);
   const res = await fetch(`http://localhost:5000/destination/${id}`, {
     headers: {
-      authorization: "logged in",
+      authorization: `Bearer ${token.token}`,
     },
   });
   const destination = await res.json();
